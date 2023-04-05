@@ -2,6 +2,7 @@
 import Header from './components/Header.vue';
 import SearchBar from './components/SearchBar.vue'
 import FilterMenu from './components/FilterMenu.vue'
+import { movies } from './movies';
 </script>
 
 <template>
@@ -29,22 +30,13 @@ import FilterMenu from './components/FilterMenu.vue'
           </thead>
           <tbody>
             <tr
-              class="border-b bg-emerald-50 dark:border-neutral-500 dark:bg-neutral-700">
-              <td class="whitespace-nowrap px-6 py-4 font-medium">1</td>
-              <td class="whitespace-nowrap px-6 py-4">Terminator</td>
-              <td class="whitespace-nowrap px-6 py-4">2.5</td>
-              <td class="whitespace-nowrap px-6 py-4">Action</td>
-              <td class="whitespace-nowrap px-6 py-4">2018</td>
-              <td class="whitespace-nowrap px-6 py-4">5.0</td>
-            </tr>
-            <tr
-              class="border-b bg-white dark:border-neutral-500 dark:bg-neutral-600">
-              <td class="whitespace-nowrap px-6 py-4 font-medium">2</td>
-              <td class="whitespace-nowrap px-6 py-4">Die Hard</td>
-              <td class="whitespace-nowrap px-6 py-4">4.5</td>
-              <td class="whitespace-nowrap px-6 py-4">Action</td>
-              <td class="whitespace-nowrap px-6 py-4">2019</td>
-              <td class="whitespace-nowrap px-6 py-4">4.0</td>
+              class="border-b bg-emerald-50 dark:border-neutral-500 dark:bg-neutral-700" v-for="movie, index in movies">
+              <td class="whitespace-nowrap px-6 py-4 font-medium">{{ index + 1 }}</td>
+              <td class="whitespace-nowrap px-6 py-4">{{ movie.title  }}</td>
+              <td class="whitespace-nowrap px-6 py-4">{{ movie.rating }}</td>
+              <td class="whitespace-nowrap px-6 py-4">{{ movie.genre.name }}</td>
+              <td class="whitespace-nowrap px-6 py-4">{{ movie.releaseYear }}</td>
+              <td class="whitespace-nowrap px-6 py-4">{{ movie.rating }}</td>
             </tr>
           </tbody>
         </table>
