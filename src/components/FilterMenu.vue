@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-const showDropdown = ref<boolean>(true)
+const showDropdown = ref<boolean>(false)
 
 </script>
 
