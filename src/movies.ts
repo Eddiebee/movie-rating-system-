@@ -1,11 +1,18 @@
-export const movies = [
+export interface Movies {
+  _id: string
+  title: string
+  genre: {_id: string, name: string}
+  rating: number
+  releaseYear: string
+}
+
+export const movies: Array<Movies> = [
   {
     _id: "5b21ca3eeb7f6fbccd471815",
     title: "Terminator",
     genre: { _id: "5b21ca3eeb7f6fbccd471818", name: "Action" },
     rating: 2.5,
     releaseYear: "2018",
-    liked: true,
   },
   {
     _id: "5b21ca3eeb7f6fbccd471816",
