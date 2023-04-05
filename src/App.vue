@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import Header from './components/Header.vue';
+import SearchBar from './components/SearchBar.vue'
 </script>
 
 <template>
   <Header/>
+  <SearchBar/>
   <div class="flex flex-col">
   <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
     <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
