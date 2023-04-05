@@ -2,7 +2,6 @@
 import Header from './components/Header.vue';
 import SearchBar from './components/SearchBar.vue'
 import FilterMenu from './components/FilterMenu.vue'
-import ArrowUpIcon from './assets/arrowUp.svg'
 </script>
 
 <template>
@@ -18,7 +17,10 @@ import ArrowUpIcon from './assets/arrowUp.svg'
             class="border-b bg-white font-medium dark:border-neutral-500 dark:bg-neutral-600">
             <tr>
               <th scope="col" class="px-6 py-4">#</th>
-              <th scope="col" class="px-6 py-4">Title </th>
+              <th scope="col" class="px-6 py-4">Title 
+                <img src="./assets/arrowUp.svg" class="inline" alt="Sort in ascending order" />
+                <img src="./assets/arrowDown.svg" class="inline" alt="Sort in ascending order" />
+              </th>
               <th scope="col" class="px-6 py-4">Rating</th>
               <th scope="col" class="px-6 py-4">Genre</th>
               <th scope="col" class="px-6 py-4">Release Year</th>
