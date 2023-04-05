@@ -6,19 +6,22 @@ import { movies } from './movies';
 import { ref } from 'vue';
 
 // search functionality
-
 let moviesData = ref(movies);
 let searchInput = ref("");
-let filters = [];
 
+
+const headings = ["#", "title", "rating", "genre", "release year",]
 
 
 // filter functionality
-const showDropdown = ref<boolean>(false)
+const showDropdown = ref<boolean>(false);
 
-const genres = ["action", "comedy", "thriller"]
+const genres = ["action", "comedy", "thriller"];
 
-let selectedGenres = ref<Array<String>>([])
+let selectedGenres = ref<Array<String>>([]);
+
+// sort functionality
+let sortOrder = ref("asc")
 
 
 const filteredMovies = () => {
@@ -55,6 +58,7 @@ const filteredMovies = () => {
       </div>
     </div>
   </div>
+
   <!-- <FilterMenu/> -->
   <div class="flex justify-center">
     <div>
@@ -90,6 +94,8 @@ const filteredMovies = () => {
       </div>
     </div>
   </div>
+
+  <!-- Movies Table -->
   <div class="flex flex-col">
     <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
       <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
@@ -97,15 +103,11 @@ const filteredMovies = () => {
           <table class="min-w-full text-left text-sm font-light">
             <thead class="border-b bg-white font-medium dark:border-neutral-500 dark:bg-neutral-600">
               <tr>
-                <th scope="col" class="px-6 py-4">#</th>
-                <th scope="col" class="px-6 py-4">Title
-                  <img src="./assets/arrowUp.svg" class="inline" alt="Sort in ascending order" />
-                  <img src="./assets/arrowDown.svg" class="inline" alt="Sort in ascending order" />
+                <th scope="col" class="px-6 py-4" v-for="heading in headings">
+                  {{  heading.toUpperCase() }}
+                  <img src="./assets/arrowUp.svg" class="inline" alt="Sort in ascending order" v-if="sortOrder === 'asc'"/>
+                  <img src="./assets/arrowDown.svg" class="inline" alt="Sort in ascending order" v-else/>
                 </th>
-                <th scope="col" class="px-6 py-4">Rating</th>
-                <th scope="col" class="px-6 py-4">Genre</th>
-                <th scope="col" class="px-6 py-4">Release Year</th>
-                <th scope="col" class="px-6 py-4">Rating</th>
               </tr>
             </thead>
             <tbody>
@@ -116,7 +118,6 @@ const filteredMovies = () => {
                 <td class="whitespace-nowrap px-6 py-4">{{ movie.rating }}</td>
                 <td class="whitespace-nowrap px-6 py-4">{{ movie.genre.name }}</td>
                 <td class="whitespace-nowrap px-6 py-4">{{ movie.releaseYear }}</td>
-                <td class="whitespace-nowrap px-6 py-4">{{ movie.rating }}</td>
               </tr>
             </tbody>
           </table>
