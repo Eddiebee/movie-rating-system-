@@ -30,7 +30,7 @@ import { movies } from './movies';
           </thead>
           <tbody>
             <tr
-              class="border-b bg-emerald-50 dark:border-neutral-500 dark:bg-neutral-700" v-for="movie, index in movies">
+              class="border-b bg-emerald-50 dark:border-neutral-500 dark:bg-neutral-700" v-for="movie, index in movies" :key="movie._id">
               <td class="whitespace-nowrap px-6 py-4 font-medium">{{ index + 1 }}</td>
               <td class="whitespace-nowrap px-6 py-4">{{ movie.title  }}</td>
               <td class="whitespace-nowrap px-6 py-4">{{ movie.rating }}</td>
