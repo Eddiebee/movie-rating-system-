@@ -2,6 +2,7 @@
 import Header from "./components/Header.vue";
 import SearchBar from "./components/SearchBar.vue";
 import FilterMenu from "./components/FilterMenu.vue";
+import _ from "lodash";
 import { movies } from "./movies";
 import { ref } from "vue";
 
@@ -12,7 +13,7 @@ const searchParameters = ref(["title", "date"]);
 let selectedSearchParameter = ref("title");
 let showSearchDropdown = ref<boolean>(false);
 
-const headings = ["title", "rating", "genre", "release year"];
+const headings = ["title", "rating", "genre.name", "releaseYear"];
 
 // filter functionality
 const showDropdown = ref<boolean>(false);
@@ -22,10 +23,26 @@ const genres = ["action", "comedy", "thriller"];
 let selectedGenres = ref<Array<String>>([]);
 
 // sort functionality
-let sortOrder = ref("asc");
+let iteratees = ref<String[]>([]);
+let sortOrders = ref<String[]>([]);
+
+const handleSort = (iteratee: String, sortOrder: String) => {
+  if (iteratees.value.includes(iteratee)) {
+    const iterateeIndex = iteratees.value.indexOf(iteratee);
+    if (sortOrders.value[iterateeIndex] === "asc") {
+      sortOrders.value[iterateeIndex] = "desc";
+    } else {
+      sortOrders.value[iterateeIndex] = "asc";
+    }
+  } else {
+    iteratees.value.push(iteratee);
+    sortOrders.value.push(sortOrder);
+  }
+};
 
 const filteredMovies = () => {
-  const filteredMoviesData = moviesData.value.filter((movie) => {
+  console.log();
+  let filteredMoviesData = moviesData.value.filter((movie) => {
     if (selectedSearchParameter.value === "title") {
       return movie.title
         .toLowerCase()
@@ -35,13 +52,21 @@ const filteredMovies = () => {
     }
   });
 
-  if (!!selectedGenres.value.length) {
-    return filteredMoviesData.filter((movie) =>
+  if (selectedGenres.value.length) {
+    filteredMoviesData = filteredMoviesData.filter((movie) =>
       selectedGenres.value.includes(movie.genre.name.toLowerCase())
     );
-  } else {
-    return filteredMoviesData;
   }
+
+  if (iteratees.value.length && sortOrders.value.length) {
+    filteredMoviesData = _.orderBy(
+      filteredMoviesData,
+      iteratees.value,
+      sortOrders.value
+    );
+  }
+
+  return filteredMoviesData;
 };
 </script>
 
@@ -166,54 +191,69 @@ const filteredMovies = () => {
   </div>
 
   <!-- Movies Table -->
-  <div class="flex flex-col">
-    <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-      <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
-        <div class="overflow-hidden">
-          <table class="min-w-full text-left text-sm font-light">
-            <thead
-              class="border-b bg-white font-medium dark:border-neutral-500 dark:bg-neutral-600"
-            >
-              <tr>
-                <th scope="col" class="px-6 py-4" v-for="heading in headings">
-                  {{ heading.toUpperCase() }}
-                  <img
-                    src="./assets/arrowUp.svg"
-                    class="inline"
-                    alt="Sort in ascending order"
-                    v-if="sortOrder === 'asc'"
-                  />
-                  <img
-                    src="./assets/arrowDown.svg"
-                    class="inline"
-                    alt="Sort in ascending order"
-                    v-else
-                  />
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr
-                class="border-b bg-emerald-50 dark:border-neutral-500 dark:bg-neutral-700"
-                v-for="movie in filteredMovies()"
-                :key="movie._id"
+  <div class="container mx-auto">
+    <div class="flex flex-col">
+      <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
+          <div class="overflow-hidden">
+            <table class="min-w-full text-left text-sm font-light">
+              <thead
+                class="border-b bg-white font-medium dark:border-neutral-500 dark:bg-neutral-600"
               >
-                <td class="whitespace-nowrap px-6 py-4">{{ movie.title }}</td>
-                <td class="whitespace-nowrap px-6 py-4">{{ movie.rating }}</td>
-                <td class="whitespace-nowrap px-6 py-4">
-                  {{ movie.genre.name }}
-                </td>
-                <td class="whitespace-nowrap px-6 py-4">
-                  {{ movie.releaseYear }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
+                <tr>
+                  <th scope="col" class="px-6 py-4 cursor-pointer">#</th>
+                  <th
+                    scope="col"
+                    class="px-6 py-4 cursor-pointer"
+                    v-for="heading in headings"
+                  >
+                    {{ heading.toUpperCase() }}
+                    <img
+                      src="./assets/arrowUp.svg"
+                      class="inline"
+                      alt="Sort in ascending order"
+                      v-if="sortOrders[iteratees.indexOf(heading)] === 'asc'"
+                      @click="
+                        () => {
+                          handleSort(heading, 'asc');
+                        }
+                      "
+                    />
+                    <img
+                      src="./assets/arrowDown.svg"
+                      class="inline"
+                      alt="Sort in ascending order"
+                      v-else
+                      @click="handleSort(heading, 'desc')"
+                    />
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  class="border-b bg-emerald-50 dark:border-neutral-500 dark:bg-neutral-700 transition duration-400 ease-in-out hover:bg-emerald-100 cursor-pointer"
+                  v-for="(movie, index) in filteredMovies()"
+                  :key="movie._id"
+                >
+                  <td class="whitespace-nowrap px-6 py-4">{{ index + 1 }}</td>
+                  <td class="whitespace-nowrap px-6 py-4">{{ movie.title }}</td>
+                  <td class="whitespace-nowrap px-6 py-4">
+                    {{ movie.rating }}
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4">
+                    {{ movie.genre.name }}
+                  </td>
+                  <td class="whitespace-nowrap px-6 py-4">
+                    {{ movie.releaseYear }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </div>
-
   <!-- Not Found -->
   <div
     class="flex justify-center text-black-500 text-lg font-semibold tracking-wide"
