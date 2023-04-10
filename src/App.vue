@@ -30,8 +30,9 @@ const filteredMovies = () => {
       return movie.title
         .toLowerCase()
         .includes(searchInput.value.toLowerCase());
+    } else {
+      return movie.releaseYear.includes(searchInput.value);
     }
-    return movie.releaseYear.includes(searchInput.value);
   });
 
   if (!!selectedGenres.value.length) {
@@ -211,5 +212,13 @@ const filteredMovies = () => {
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Not Found -->
+  <div
+    class="flex justify-center text-black-500 text-lg font-semibold tracking-wide"
+    v-if="!filteredMovies().length"
+  >
+    <p>oops... no movies found!</p>
   </div>
 </template>
