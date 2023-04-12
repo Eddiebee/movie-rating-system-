@@ -2,6 +2,7 @@
 import Header from "./components/Header.vue";
 import SearchBar from "./components/SearchBar.vue";
 import FilterMenu from "./components/FilterMenu.vue";
+import ReviewInput from "./components/WriteReview.vue";
 import StarRating from "vue-star-rating";
 import _ from "lodash";
 import { movies } from "./movies";
@@ -17,14 +18,13 @@ let showSearchDropdown = ref<boolean>(false);
 const headings = ["title", "rating", "genre.name", "releaseYear"];
 const formattedHeadings = ["title", "rating", "genre", "release year"];
 
-// filter functionality
 const showDropdown = ref<boolean>(false);
 
 const genres = ["action", "comedy", "thriller"];
 
 let selectedGenres = ref<String[]>([]);
 
-// sort functionality
+// sort feature
 let iteratees = ref<String[]>([]);
 let sortOrders = ref<String[]>([]);
 
@@ -42,8 +42,8 @@ const handleSort = (iteratee: String, sortOrder: String) => {
   }
 };
 
+// filter feature
 const filteredMovies = () => {
-  console.log();
   let filteredMoviesData = moviesData.value.filter((movie) => {
     if (selectedSearchParameter.value === "title") {
       return movie.title
@@ -71,6 +71,7 @@ const filteredMovies = () => {
   return filteredMoviesData;
 };
 
+// rating feature
 let rating = ref(0);
 const setRating = (r: number) => {
   rating.value = r;
@@ -279,8 +280,8 @@ const addRating = (movieId: string) => {
                   <!-- toggle card -->
                   <div class="flex gap-5 flex-wrap bg-slate-50 py-5 px-4">
                     <!-- rating component -->
-                    <div class="flex-col justify-center w-full gap-5">
-                      <div class="mb-3">
+                    <div class="flex flex-col justify-center gap-5">
+                      <div>
                         <star-rating
                           :increment="0.5"
                           :glow="3"
@@ -298,18 +299,29 @@ const addRating = (movieId: string) => {
                         Add rating
                       </button>
                     </div>
-                    <button
-                      type="button"
-                      class="inline-block rounded bg-green-800 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#14a44d] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)]"
-                    >
-                      Write a review
-                    </button>
-                    <button
-                      type="button"
-                      class="inline-block rounded bg-green-500 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#14a44d] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)]"
-                    >
-                      Suggest related movies
-                    </button>
+                    <!-- write review component -->
+                    <div class="flex-col">
+                      <ul
+                        class="w-96 px-2 bg-emerald-100"
+                        v-for="review in movie.reviews"
+                      >
+                        <li
+                          class="w-full border-b-2 border-neutral-100 border-opacity-100 py-4 dark:border-opacity-50"
+                        >
+                          {{ review.review }}
+                        </li>
+                      </ul>
+                      <review-input :movie="movie" />
+                    </div>
+                    <!-- suggest related movies component -->
+                    <div>
+                      <button
+                        type="button"
+                        class="inline-block rounded bg-green-500 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#14a44d] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)]"
+                      >
+                        Suggest related movies
+                      </button>
+                    </div>
                   </div>
                 </div>
               </tbody>
