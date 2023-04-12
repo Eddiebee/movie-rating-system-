@@ -135,7 +135,7 @@ const addRating = (movieId: string) => {
             <li v-for="searchParameter in searchParameters">
               <span
                 :class="`block w-full whitespace-nowrap cursor-pointer bg-transparent ${
-                  searchParameter == selectedSearchParameter && 'text-green-400'
+                  searchParameter == selectedSearchParameter && 'text-green-500'
                 } py-2 px-4 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600`"
                 data-te-dropdown-item-ref
                 @click="selectedSearchParameter = searchParameter"
@@ -147,7 +147,6 @@ const addRating = (movieId: string) => {
       </div>
     </div>
   </div>
-
   <!-- <FilterMenu/> -->
   <div class="flex justify-center">
     <div>
@@ -187,7 +186,7 @@ const addRating = (movieId: string) => {
           <li v-for="genre in genres">
             <span
               :class="`block w-full whitespace-nowrap cursor-pointer bg-transparent py-2 px-4 text-sm font-normal text-neutral-700 ${
-                selectedGenres.includes(genre) && 'text-green-400'
+                selectedGenres.includes(genre) && 'text-green-500'
               }  hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600`"
               data-te-dropdown-item-ref
               @click="

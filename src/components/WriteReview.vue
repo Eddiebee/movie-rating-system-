@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { Movies, Review } from "../movies";
+import { Movie, Review } from "../movies";
 
 const props = defineProps<{
-  movie: Movies;
+  movie: Movie;
 }>();
 
 const reviewInput = ref("");
