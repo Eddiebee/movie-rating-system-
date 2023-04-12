@@ -2,6 +2,7 @@
 import Header from "./components/Header.vue";
 import SearchBar from "./components/SearchBar.vue";
 import FilterMenu from "./components/FilterMenu.vue";
+import StarRating from "vue-star-rating";
 import _ from "lodash";
 import { movies } from "./movies";
 import { ref } from "vue";
@@ -14,13 +15,14 @@ let selectedSearchParameter = ref("title");
 let showSearchDropdown = ref<boolean>(false);
 
 const headings = ["title", "rating", "genre.name", "releaseYear"];
+const formattedHeadings = ["title", "rating", "genre", "release year"];
 
 // filter functionality
 const showDropdown = ref<boolean>(false);
 
 const genres = ["action", "comedy", "thriller"];
 
-let selectedGenres = ref<Array<String>>([]);
+let selectedGenres = ref<String[]>([]);
 
 // sort functionality
 let iteratees = ref<String[]>([]);
@@ -67,6 +69,23 @@ const filteredMovies = () => {
   }
 
   return filteredMoviesData;
+};
+
+let rating = ref(0);
+const setRating = (r: number) => {
+  rating.value = r;
+};
+
+const addRating = (movieId: string) => {
+  const newMoviesData = moviesData.value.map((mv) => {
+    const avgRating = Number(((rating.value + mv.rating) / 2).toPrecision(2));
+    if (mv._id === movieId) {
+      return { ...mv, rating: avgRating };
+    } else {
+      return mv;
+    }
+  });
+  moviesData.value = newMoviesData;
 };
 </script>
 
@@ -201,13 +220,13 @@ const filteredMovies = () => {
                 class="border-b bg-white font-medium dark:border-neutral-500 dark:bg-neutral-600"
               >
                 <tr>
-                  <th scope="col" class="px-6 py-4 cursor-pointer">#</th>
+                  <th class="px-6 py-4 cursor-pointer">#</th>
                   <th
                     scope="col"
                     class="px-6 py-4 cursor-pointer"
-                    v-for="heading in headings"
+                    v-for="(heading, index) in headings"
                   >
-                    {{ heading.toUpperCase() }}
+                    {{ formattedHeadings[index].toUpperCase() }}
                     <img
                       src="./assets/arrowUp.svg"
                       class="inline"
@@ -230,23 +249,69 @@ const filteredMovies = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr
-                  class="border-b bg-emerald-50 dark:border-neutral-500 dark:bg-neutral-700 transition duration-400 ease-in-out hover:bg-emerald-100 cursor-pointer"
+                <div
+                  class=""
                   v-for="(movie, index) in filteredMovies()"
                   :key="movie._id"
                 >
-                  <td class="whitespace-nowrap px-6 py-4">{{ index + 1 }}</td>
-                  <td class="whitespace-nowrap px-6 py-4">{{ movie.title }}</td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                    {{ movie.rating }}
-                  </td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                    {{ movie.genre.name }}
-                  </td>
-                  <td class="whitespace-nowrap px-6 py-4">
-                    {{ movie.releaseYear }}
-                  </td>
-                </tr>
+                  <!-- table row -->
+                  <div>
+                    <tr
+                      class="border-b bg-emerald-50 dark:border-neutral-500 dark:bg-neutral-700 transition duration-400 ease-in-out hover:bg-emerald-100 cursor-pointer flex-wrap"
+                    >
+                      <td class="whitespace-nowrap px-6 py-4">
+                        {{ index + 1 }}
+                      </td>
+                      <td class="whitespace-nowrap px-6 py-4">
+                        {{ movie.title }}
+                      </td>
+                      <td class="whitespace-nowrap px-6 py-4">
+                        {{ movie.rating }}
+                      </td>
+                      <td class="whitespace-nowrap px-6 py-4">
+                        {{ movie.genre.name }}
+                      </td>
+                      <td class="whitespace-nowrap px-6 py-4">
+                        {{ movie.releaseYear }}
+                      </td>
+                    </tr>
+                  </div>
+                  <!-- toggle card -->
+                  <div class="flex gap-5 flex-wrap bg-slate-50 py-5 px-4">
+                    <!-- rating component -->
+                    <div class="flex-col justify-center w-full gap-5">
+                      <div class="mb-3">
+                        <star-rating
+                          :increment="0.5"
+                          :glow="3"
+                          :star-size="20"
+                          active-color="rgb(34,139,34)"
+                          inactive-color="rgb(211,211,211)"
+                          @update:rating="setRating"
+                        />
+                      </div>
+                      <button
+                        type="button"
+                        class="inline-block rounded bg-green-300 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#14a44d] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)]"
+                        @click="addRating(movie._id)"
+                      >
+                        Add rating
+                      </button>
+                    </div>
+                    <button
+                      type="button"
+                      class="inline-block rounded bg-green-500 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#14a44d] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)]"
+                    >
+                      Suggest related movies
+                    </button>
+                    <button
+                      type="button"
+                      class="inline-block rounded bg-green-800 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#14a44d] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)]"
+                    >
+                      Write a review
+                    </button>
+                  </div>
+                </div>
               </tbody>
             </table>
           </div>
@@ -259,6 +324,6 @@ const filteredMovies = () => {
     class="flex justify-center text-black-500 text-lg font-semibold tracking-wide"
     v-if="!filteredMovies().length"
   >
-    <p>oops... no movies found!</p>
+    <p>no movies found!</p>
   </div>
 </template>
