@@ -1,9 +1,9 @@
 export interface Movies {
-  _id: string
-  title: string
-  genre: {_id: string, name: string}
-  rating: number
-  releaseYear: string
+  _id: string;
+  title: string;
+  genre: { _id: string; name: string };
+  rating: number;
+  releaseYear: string;
 }
 
 export const movies: Array<Movies> = [
