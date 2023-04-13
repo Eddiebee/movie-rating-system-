@@ -1,16 +1,23 @@
 <script setup lang="ts">
 import Header from "./components/Header.vue";
-import SearchBar from "./components/SearchBar.vue";
-import FilterMenu from "./components/FilterMenu.vue";
+import BaseDropdown from "./components/BaseDropdown.vue";
+import BaseDropdownList from "./components/BaseDropdownList.vue";
+import BaseInput from "./components/BaseInput.vue";
+import BaseButton from "./components/BaseButton.vue";
 import ReviewInput from "./components/WriteReview.vue";
+import FilterIcon from "./assets/icons/FilterIcon.vue";
+import ChevronDownIcon from "./assets/icons/ChevronDownIcon.vue";
+import ArrowUpIcon from "./assets/icons/ArrowUpIcon.vue";
+import ArrowDownIcon from "./assets/icons/ArrowDownIcon.vue";
 import StarRating from "vue-star-rating";
 import _ from "lodash";
+import sort from "./utils/sort";
 import { movies } from "./movies";
 import { ref } from "vue";
 
 // search functionality
 let moviesData = ref(movies);
-let searchInput = ref("");
+let searchInput = ref<string>("");
 const searchParameters = ref(["title", "date"]);
 let selectedSearchParameter = ref("title");
 let showSearchDropdown = ref<boolean>(false);
@@ -18,28 +25,26 @@ let showSearchDropdown = ref<boolean>(false);
 const headings = ["title", "rating", "genre.name", "releaseYear"];
 const formattedHeadings = ["title", "rating", "genre", "release year"];
 
-const showDropdown = ref<boolean>(false);
+const showFilterDropdown = ref<boolean>(false);
 
 const genres = ["action", "comedy", "thriller"];
 
-let selectedGenres = ref<String[]>([]);
+let selectedGenre = ref<string>("");
 
 // sort feature
-let iteratees = ref<String[]>([]);
-let sortOrders = ref<String[]>([]);
+let iteratees = ref<string[]>([]);
+let sortOrders = ref<string[]>([]);
 
-const handleSort = (iteratee: String, sortOrder: String) => {
-  if (iteratees.value.includes(iteratee)) {
-    const iterateeIndex = iteratees.value.indexOf(iteratee);
-    if (sortOrders.value[iterateeIndex] === "asc") {
-      sortOrders.value[iterateeIndex] = "desc";
-    } else {
-      sortOrders.value[iterateeIndex] = "asc";
-    }
-  } else {
-    iteratees.value.push(iteratee);
-    sortOrders.value.push(sortOrder);
-  }
+const handleSort = (iteratee: string, sortOrder: string) => {
+  const { sorted, orders } = sort(
+    iteratee,
+    sortOrder,
+    iteratees.value,
+    sortOrders.value
+  );
+
+  iteratees.value = sorted;
+  sortOrders.value = orders;
 };
 
 // filter feature
@@ -54,9 +59,9 @@ const filteredMovies = () => {
     }
   });
 
-  if (selectedGenres.value.length) {
+  if (selectedGenre.value) {
     filteredMoviesData = filteredMoviesData.filter((movie) =>
-      selectedGenres.value.includes(movie.genre.name.toLowerCase())
+      selectedGenre.value.includes(movie.genre.name.toLowerCase())
     );
   }
 
@@ -78,134 +83,74 @@ const setRating = (r: number) => {
 };
 
 const addRating = (movieId: string) => {
-  const newMoviesData = moviesData.value.map((mv) => {
-    const avgRating = Number(((rating.value + mv.rating) / 2).toPrecision(2));
-    if (mv._id === movieId) {
-      return { ...mv, rating: avgRating };
-    } else {
-      return mv;
-    }
-  });
-  moviesData.value = newMoviesData;
+  if (rating.value) {
+    const newMoviesData = moviesData.value.map((mv) => {
+      const avgRating = Number(((rating.value + mv.rating) / 2).toFixed(2));
+      if (mv._id === movieId) {
+        return { ...mv, rating: avgRating };
+      } else {
+        return mv;
+      }
+    });
+
+    moviesData.value = newMoviesData;
+    rating.value = 0;
+  } else {
+    return;
+  }
 };
 </script>
 
 <template>
-  <Header />
-  <!-- Search Bar -->
+  <Header title="Movie Rating System" msg="...built with our beloved Vue.js" />
+  <!-- custom search input -->
   <div class="flex justify-center mt-4">
     <div class="mb-3 xl:w-96">
-      <div class="relative mb-4 flex w-full flex-wrap items-stretch">
-        <input
-          type="search"
-          class="relative m-0 -mr-px block w-[1%] min-w-0 flex-auto rounded-l border border-solid border-neutral-300 bg-transparent bg-clip-padding px-3 py-1.5 text-base font-normal text-neutral-700 outline-none transition duration-300 ease-in-out focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:text-neutral-200 dark:placeholder:text-neutral-200"
-          placeholder="Search Movies..."
-          aria-label="Search"
-          aria-describedby="button-addon1"
-          v-model="searchInput"
-        />
-        <div class="relative" data-te-dropdown-ref>
-          <button
-            class="relative z-[2] flex items-center rounded-r bg-green-400 px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary-700 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
-            type="button"
-            id="button-addon1"
-            data-te-ripple-init
-            data-te-ripple-color="light"
+      <div class="relative mb-4 flex w-full flex-wrap items-center gap-4">
+        <base-input v-model="searchInput" label="Search" type="search" />
+        <div class="relative" data-te-dropdown-position="dropend">
+          <base-dropdown
             @click="showSearchDropdown = !showSearchDropdown"
+            class="ml-[-6rem]"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              class="h-5 w-5"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </button>
-          <ul
-            class="absolute z-[1000] float-left m-0 min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700"
-            aria-labelledby="dropdownMenuButton1e"
-            data-te-dropdown-menu-ref
+            <template #buttonContent>
+              <chevron-down-icon />
+            </template>
+          </base-dropdown>
+          <base-dropdown-list
+            v-model="selectedSearchParameter"
             v-show="showSearchDropdown"
-          >
-            <li v-for="searchParameter in searchParameters">
-              <span
-                :class="`block w-full whitespace-nowrap cursor-pointer bg-transparent ${
-                  searchParameter == selectedSearchParameter && 'text-green-500'
-                } py-2 px-4 text-sm font-normal text-neutral-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600`"
-                data-te-dropdown-item-ref
-                @click="selectedSearchParameter = searchParameter"
-                >{{ searchParameter.toUpperCase() }}</span
-              >
-            </li>
-          </ul>
+            :parameters="searchParameters"
+            @click="showSearchDropdown = !showSearchDropdown"
+            class="ml-[-6rem]"
+          />
         </div>
       </div>
     </div>
   </div>
+
   <!-- Filter Menu -->
   <div class="flex justify-center">
-    <div>
-      <div class="relative" data-te-dropdown-position="dropend">
-        <button
-          class="flex items-center whitespace-nowrap rounded bg-green-500 px-6 pt-2.5 pb-2 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] motion-reduce:transition-none"
-          type="button"
-          id="dropdownMenuButton1e"
-          data-te-dropdown-toggle-ref
-          aria-expanded="false"
-          data-te-ripple-init
-          data-te-ripple-color="light"
-          @click="showDropdown = !showDropdown"
-        >
+    <div class="relative" data-te-dropdown-position="dropend">
+      <base-dropdown @click="showFilterDropdown = !showFilterDropdown">
+        <template #buttonContent>
           Genre
           <span class="ml-2 w-1.5">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              class="bi bi-filter-right"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M14 10.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-7a.5.5 0 0 0 0 1h7a.5.5 0 0 0 .5-.5zm0-3a.5.5 0 0 0-.5-.5h-11a.5.5 0 0 0 0 1h11a.5.5 0 0 0 .5-.5z"
-              />
-            </svg>
+            <filter-icon />
           </span>
-        </button>
-        <ul
-          class="absolute z-[1000] float-left m-0 min-w-max list-none overflow-hidden rounded-lg border-none bg-white bg-clip-padding text-left text-base shadow-lg dark:bg-neutral-700"
-          aria-labelledby="dropdownMenuButton1e"
-          data-te-dropdown-menu-ref
-          v-show="showDropdown"
-        >
-          <li v-for="genre in genres">
-            <span
-              :class="`block w-full whitespace-nowrap cursor-pointer bg-transparent py-2 px-4 text-sm font-normal text-neutral-700 ${
-                selectedGenres.includes(genre) && 'text-green-500'
-              }  hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600`"
-              data-te-dropdown-item-ref
-              @click="
-                () => {
-                  if (selectedGenres.includes(genre)) {
-                    selectedGenres = selectedGenres.filter(
-                      (selectedGenre) =>
-                        selectedGenre.toLowerCase() !== genre.toLowerCase()
-                    );
-                  } else {
-                    selectedGenres.push(genre.toLowerCase());
-                  }
-                }
-              "
-              >{{ genre.toUpperCase() }}</span
-            >
-          </li>
-        </ul>
-      </div>
+        </template>
+      </base-dropdown>
+      <base-dropdown-list
+        v-model="selectedGenre"
+        :parameters="genres"
+        v-show="showFilterDropdown"
+        @click="
+          () => {
+            selectedGenre = '';
+            showFilterDropdown = !showFilterDropdown;
+          }
+        "
+      />
     </div>
   </div>
   <!-- Movies Table -->
@@ -222,28 +167,20 @@ const addRating = (movieId: string) => {
                   <th class="px-6 py-4 cursor-pointer">#</th>
                   <th
                     scope="col"
-                    class="px-6 py-4 cursor-pointer"
+                    class="px-6 py-4 cursor-pointer inline"
                     v-for="(heading, index) in headings"
                   >
-                    {{ formattedHeadings[index].toUpperCase() }}
-                    <img
-                      src="./assets/arrowUp.svg"
-                      class="inline"
-                      alt="Sort in ascending order"
+                    <span
                       v-if="sortOrders[iteratees.indexOf(heading)] === 'asc'"
-                      @click="
-                        () => {
-                          handleSort(heading, 'asc');
-                        }
-                      "
-                    />
-                    <img
-                      src="./assets/arrowDown.svg"
-                      class="inline"
-                      alt="Sort in ascending order"
-                      v-else
-                      @click="handleSort(heading, 'desc')"
-                    />
+                      @click="handleSort(heading, 'asc')"
+                    >
+                      {{ formattedHeadings[index].toUpperCase() }}
+                      <arrow-up-icon class="inline" />
+                    </span>
+                    <span v-else @click="handleSort(heading, 'desc')">
+                      {{ formattedHeadings[index].toUpperCase() }}
+                      <arrow-down-icon class="inline" />
+                    </span>
                   </th>
                 </tr>
               </thead>
@@ -289,13 +226,10 @@ const addRating = (movieId: string) => {
                           @update:rating="setRating"
                         />
                       </div>
-                      <button
-                        type="button"
-                        class="inline-block rounded bg-green-300 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#14a44d] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)]"
+                      <base-button
+                        label="Add rating"
                         @click="addRating(movie._id)"
-                      >
-                        Add rating
-                      </button>
+                      />
                     </div>
                     <!-- write review component -->
                     <div class="flex-col">
@@ -313,12 +247,11 @@ const addRating = (movieId: string) => {
                     </div>
                     <!-- suggest related movies component -->
                     <div>
-                      <button
+                      <base-button
                         type="button"
-                        class="inline-block rounded bg-green-500 px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#14a44d] transition duration-150 ease-in-out hover:bg-success-600 hover:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:bg-success-600 focus:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)] focus:outline-none focus:ring-0 active:bg-success-700 active:shadow-[0_8px_9px_-4px_rgba(20,164,77,0.3),0_4px_18px_0_rgba(20,164,77,0.2)]"
-                      >
-                        Suggest related movies
-                      </button>
+                        label="Suggest related movies"
+                        class="bg-green-500"
+                      />
                     </div>
                   </div>
                 </div>

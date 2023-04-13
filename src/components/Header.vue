@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
-
-// defineProps<{ msg: string }>();
+defineProps<{ title: string; msg: string }>();
 </script>
 
 <template>
@@ -22,7 +20,7 @@ import { ref } from "vue";
                 data-te-nav-link-ref
                 data-te-ripple-init
                 data-te-ripple-color="light"
-                >Movies Rating System</a
+                >{{ title }}</a
               >
             </li>
           </ul>
@@ -33,10 +31,8 @@ import { ref } from "vue";
     <div
       class="bg-green-50 py-20 px-6 text-center text-neutral-800 dark:bg-neutral-700 dark:text-neutral-200"
     >
-      <h1 class="mb-6 text-5xl font-bold">Movie Rating System</h1>
-      <h3 class="mb-8 text-2xl font-light">...built with our beloved Vue.js</h3>
+      <h1 class="mb-6 text-5xl font-bold">{{ title }}</h1>
+      <h3 class="mb-8 text-2xl font-light">{{ msg }}</h3>
     </div>
   </header>
 </template>
-
-<style scoped></style>
