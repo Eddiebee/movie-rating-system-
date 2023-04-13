@@ -24,7 +24,7 @@ const addSuggestion = (suggestion: string, movieId: string) => {
 <template>
   <div class="flex flex-col justify-center gap-3 mt-2">
     <base-input
-      v-model="suggestionInput"
+      v-model.trim="suggestionInput"
       label="Suggest Movies"
       class="w-[20rem]"
     />
