@@ -10,9 +10,13 @@ const props = defineProps<{
 const reviewInput = ref("");
 
 const addReview = (review: string, movieId: string) => {
-  const newReview: Review = { review, reviewer: "eddieabasi" };
-  props.movie.reviews.push(newReview);
-  reviewInput.value = "";
+  if (review) {
+    const newReview: Review = { review, reviewer: "eddieabasi" };
+    props.movie.reviews.push(newReview);
+    reviewInput.value = "";
+  } else {
+    return;
+  }
 };
 </script>
 

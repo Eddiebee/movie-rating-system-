@@ -5,6 +5,7 @@ import BaseDropdownList from "./components/BaseDropdownList.vue";
 import BaseInput from "./components/BaseInput.vue";
 import BaseButton from "./components/BaseButton.vue";
 import ReviewInput from "./components/WriteReview.vue";
+import CustomMoviesLists from "./components/CustomMoviesLists.vue";
 import FilterIcon from "./assets/icons/FilterIcon.vue";
 import ChevronDownIcon from "./assets/icons/ChevronDownIcon.vue";
 import ArrowUpIcon from "./assets/icons/ArrowUpIcon.vue";
@@ -190,28 +191,7 @@ const addRating = (movieId: string) => {
                   v-for="(movie, index) in filteredMovies()"
                   :key="movie._id"
                 >
-                  <!-- table row -->
-                  <div>
-                    <tr
-                      class="border-b bg-emerald-50 dark:border-neutral-500 dark:bg-neutral-700 transition duration-400 ease-in-out hover:bg-emerald-100 cursor-pointer flex-wrap"
-                    >
-                      <td class="whitespace-nowrap px-6 py-4">
-                        {{ index + 1 }}
-                      </td>
-                      <td class="whitespace-nowrap px-6 py-4">
-                        {{ movie.title }}
-                      </td>
-                      <td class="whitespace-nowrap px-6 py-4">
-                        {{ movie.rating }}
-                      </td>
-                      <td class="whitespace-nowrap px-6 py-4">
-                        {{ movie.genre.name }}
-                      </td>
-                      <td class="whitespace-nowrap px-6 py-4">
-                        {{ movie.releaseYear }}
-                      </td>
-                    </tr>
-                  </div>
+                  <custom-movies-lists :movie="movie" :index="index" />
                   <!-- toggle card -->
                   <div class="flex gap-5 flex-wrap bg-slate-50 py-5 px-4">
                     <!-- rating component -->
