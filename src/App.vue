@@ -6,6 +6,7 @@ import BaseInput from "./components/BaseInput.vue";
 import BaseButton from "./components/BaseButton.vue";
 import ReviewInput from "./components/WriteReview.vue";
 import CustomMoviesLists from "./components/CustomMoviesLists.vue";
+import SuggestRelatedMovies from "./components/SuggestRelatedMovies.vue";
 import FilterIcon from "./assets/icons/FilterIcon.vue";
 import ChevronDownIcon from "./assets/icons/ChevronDownIcon.vue";
 import ArrowUpIcon from "./assets/icons/ArrowUpIcon.vue";
@@ -221,12 +222,18 @@ const addRating = (movieId: string) => {
                       <review-input :movie="movie" />
                     </div>
                     <!-- suggest related movies component -->
-                    <div>
-                      <base-button
-                        type="button"
-                        label="Suggest related movies"
-                        class="bg-green-500"
-                      />
+                    <div class="flex-col">
+                      <ul
+                        class="w-96 px-2 bg-emerald-100"
+                        v-for="suggestion in movie.suggestions"
+                      >
+                        <li
+                          class="w-full border-b-2 border-neutral-100 border-opacity-100 py-4 dark:border-opacity-50"
+                        >
+                          {{ suggestion.suggestion }}
+                        </li>
+                      </ul>
+                      <suggest-related-movies :movie="movie" />
                     </div>
                   </div>
                 </div>
