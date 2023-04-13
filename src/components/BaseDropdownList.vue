@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
+import XCircleIcon from "../assets/icons/XCircle.vue";
 
 const props = defineProps<{
   modelValue: string;
@@ -22,6 +23,11 @@ const props = defineProps<{
         @click="$emit('update:modelValue', parameter)"
         >{{ parameter.toUpperCase() }}</span
       >
+    </li>
+    <li
+      class="block w-full whitespace-nowrap cursor-pointer bg-transparent py-2 px-4 text-sm font-normal text-green-700 hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600`"
+    >
+      <x-circle-icon @click="$emit('update:modelValue', '')" />
     </li>
   </ul>
 </template>

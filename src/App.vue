@@ -145,12 +145,7 @@ const addRating = (movieId: string) => {
         v-model="selectedGenre"
         :parameters="genres"
         v-show="showFilterDropdown"
-        @click="
-          () => {
-            selectedGenre = '';
-            showFilterDropdown = !showFilterDropdown;
-          }
-        "
+        @click="showFilterDropdown = !showFilterDropdown"
       />
     </div>
   </div>
