@@ -92,7 +92,7 @@ const addRating = (movieId: string) => {
 
 <template>
   <Header />
-  <!-- <SearchBar/> -->
+  <!-- Search Bar -->
   <div class="flex justify-center mt-4">
     <div class="mb-3 xl:w-96">
       <div class="relative mb-4 flex w-full flex-wrap items-stretch">
@@ -147,7 +147,7 @@ const addRating = (movieId: string) => {
       </div>
     </div>
   </div>
-  <!-- <FilterMenu/> -->
+  <!-- Filter Menu -->
   <div class="flex justify-center">
     <div>
       <div class="relative" data-te-dropdown-position="dropend">
@@ -208,7 +208,6 @@ const addRating = (movieId: string) => {
       </div>
     </div>
   </div>
-
   <!-- Movies Table -->
   <div class="container mx-auto">
     <div class="flex flex-col">
