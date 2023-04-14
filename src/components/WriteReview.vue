@@ -24,7 +24,7 @@ const addReview = (review: string) => {
   <div class="flex flex-col justify-center mt-2">
     <div class="relative mb-3 xl:w-96">
       <textarea
-        class="peer block min-h-[auto] w-full rounded border-0 bg-emerald-50 px-3 pt-[1.5rem] text-black-600 text-sm leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
+        class="peer block min-h-[auto] w-full rounded border border-solid border-neutral-300 bg-emerald-50 px-3 pt-[1.5rem] text-black-600 text-sm leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 data-[te-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 [&:not([data-te-input-placeholder-active])]:placeholder:opacity-0"
         id="exampleFormControlTextarea1"
         rows="3"
         placeholder="...amazing review"

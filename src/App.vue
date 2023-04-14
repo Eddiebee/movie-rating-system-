@@ -3,15 +3,12 @@ import Header from "./components/Header.vue";
 import BaseDropdown from "./components/BaseDropdown.vue";
 import BaseDropdownList from "./components/BaseDropdownList.vue";
 import BaseInput from "./components/BaseInput.vue";
-import BaseButton from "./components/BaseButton.vue";
-import ReviewInput from "./components/WriteReview.vue";
-import CustomMoviesLists from "./components/CustomMoviesLists.vue";
-import SuggestRelatedMovies from "./components/SuggestRelatedMovies.vue";
+import BaseNotFound from "./components/BaseNotFound.vue";
+import CustomMovieList from "./components/CustomMovieList.vue";
 import FilterIcon from "./assets/icons/FilterIcon.vue";
 import ChevronDownIcon from "./assets/icons/ChevronDownIcon.vue";
 import ArrowUpIcon from "./assets/icons/ArrowUpIcon.vue";
 import ArrowDownIcon from "./assets/icons/ArrowDownIcon.vue";
-import StarRating from "vue-star-rating";
 import _ from "lodash";
 import sort from "./utils/sort";
 import { movies } from "./movies";
@@ -76,30 +73,6 @@ const filteredMovies = () => {
   }
 
   return filteredMoviesData;
-};
-
-// rating feature
-let rating = ref(0);
-const setRating = (r: number) => {
-  rating.value = r;
-};
-
-const addRating = (movieId: string) => {
-  if (rating.value) {
-    const newMoviesData = moviesData.value.map((mv) => {
-      const avgRating = Number(((rating.value + mv.rating) / 2).toFixed(2));
-      if (mv._id === movieId) {
-        return { ...mv, rating: avgRating };
-      } else {
-        return mv;
-      }
-    });
-
-    moviesData.value = newMoviesData;
-    rating.value = 0;
-  } else {
-    return;
-  }
 };
 </script>
 
@@ -182,61 +155,7 @@ const addRating = (movieId: string) => {
                 </tr>
               </thead>
               <tbody>
-                <div
-                  class=""
-                  v-for="(movie, index) in filteredMovies()"
-                  :key="movie._id"
-                >
-                  <custom-movies-lists :movie="movie" :index="index" />
-                  <!-- toggle card -->
-                  <div class="flex gap-5 flex-wrap bg-slate-50 py-5 px-4">
-                    <!-- rating component -->
-                    <div class="flex flex-col justify-center gap-5">
-                      <div>
-                        <star-rating
-                          :increment="0.5"
-                          :glow="3"
-                          :star-size="20"
-                          active-color="rgb(34,139,34)"
-                          inactive-color="rgb(211,211,211)"
-                          @update:rating="setRating"
-                        />
-                      </div>
-                      <base-button
-                        label="Add rating"
-                        @click="addRating(movie._id)"
-                      />
-                    </div>
-                    <!-- write review component -->
-                    <div class="flex-col">
-                      <ul
-                        class="w-96 px-2 bg-emerald-100"
-                        v-for="review in movie.reviews"
-                      >
-                        <li
-                          class="w-full border-b-2 border-neutral-100 border-opacity-100 py-4 dark:border-opacity-50"
-                        >
-                          {{ review.review }}
-                        </li>
-                      </ul>
-                      <review-input :movie="movie" />
-                    </div>
-                    <!-- suggest related movies component -->
-                    <div class="flex-col">
-                      <ul
-                        class="w-96 px-2 bg-emerald-100"
-                        v-for="suggestion in movie.suggestions"
-                      >
-                        <li
-                          class="w-full border-b-2 border-neutral-100 border-opacity-100 py-4 dark:border-opacity-50"
-                        >
-                          {{ suggestion.suggestion }}
-                        </li>
-                      </ul>
-                      <suggest-related-movies :movie="movie" />
-                    </div>
-                  </div>
-                </div>
+                <custom-movie-list :movies="filteredMovies()" />
               </tbody>
             </table>
           </div>
@@ -245,10 +164,5 @@ const addRating = (movieId: string) => {
     </div>
   </div>
   <!-- Not Found -->
-  <div
-    class="flex justify-center text-black-500 text-lg font-semibold tracking-wide"
-    v-if="!filteredMovies().length"
-  >
-    <p>no movies found!</p>
-  </div>
+  <base-not-found :show="!filteredMovies().length" />
 </template>
