@@ -133,10 +133,22 @@ const filteredMovies = () => {
               <thead class="border-b font-medium dark:border-neutral-500">
                 <tr>
                   <th scope="col" class="px-6 py-4">#</th>
-                  <th scope="col" class="px-6 py-4">Title</th>
-                  <th scope="col" class="px-6 py-4">Rating</th>
-                  <th scope="col" class="px-6 py-4">Genre</th>
-                  <th scope="col" class="px-6 py-4">Release Year</th>
+                  <th
+                    scope="col"
+                    class="px-6 py-4 cursor-pointer"
+                    v-for="(heading, index) in headings"
+                  >
+                    <span
+                      v-if="sortOrders[iteratees.indexOf(heading)] === 'asc'"
+                      @click="handleSort(heading, 'asc')"
+                      >{{ formattedHeadings[index].toUpperCase() }}
+                      <arrow-up-icon class="inline"
+                    /></span>
+                    <span v-else @click="handleSort(heading, 'desc')">
+                      {{ formattedHeadings[index].toUpperCase() }}
+                      <arrow-down-icon class="inline" />
+                    </span>
+                  </th>
                 </tr>
               </thead>
               <!-- tbody -->
