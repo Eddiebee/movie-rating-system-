@@ -130,33 +130,17 @@ const filteredMovies = () => {
         <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
           <div class="overflow-hidden">
             <table class="min-w-full text-left text-sm font-light">
-              <thead
-                class="border-b bg-white font-medium dark:border-neutral-500 dark:bg-neutral-600"
-              >
+              <thead class="border-b font-medium dark:border-neutral-500">
                 <tr>
-                  <th class="px-6 py-4 cursor-pointer">#</th>
-                  <th
-                    scope="col"
-                    class="px-6 py-4 cursor-pointer inline"
-                    v-for="(heading, index) in headings"
-                  >
-                    <span
-                      v-if="sortOrders[iteratees.indexOf(heading)] === 'asc'"
-                      @click="handleSort(heading, 'asc')"
-                    >
-                      {{ formattedHeadings[index].toUpperCase() }}
-                      <arrow-up-icon class="inline" />
-                    </span>
-                    <span v-else @click="handleSort(heading, 'desc')">
-                      {{ formattedHeadings[index].toUpperCase() }}
-                      <arrow-down-icon class="inline" />
-                    </span>
-                  </th>
+                  <th scope="col" class="px-6 py-4">#</th>
+                  <th scope="col" class="px-6 py-4">Title</th>
+                  <th scope="col" class="px-6 py-4">Rating</th>
+                  <th scope="col" class="px-6 py-4">Genre</th>
+                  <th scope="col" class="px-6 py-4">Release Year</th>
                 </tr>
               </thead>
-              <tbody>
-                <custom-movie-list :movies="filteredMovies()" />
-              </tbody>
+              <!-- tbody -->
+              <custom-movie-list :movies="filteredMovies()" />
             </table>
           </div>
         </div>

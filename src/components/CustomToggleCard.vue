@@ -33,36 +33,36 @@ const addRating = () => {
 </script>
 
 <template>
-  <div
-    class="flex gap-5 flex-wrap bg-slate-50 py-5 px-4 transition-all ease-out duration-700"
-  >
+  <td colspan="5" class="gap-5 py-5 px-2">
+    <div class="md:flex md:justify-evenly md:items-center">
+      
     <!-- rating component -->
-    <div class="flex flex-col justify-center gap-5">
-      <div>
-        <star-rating
-          :increment="0.5"
-          :glow="3"
-          :star-size="20"
-          active-color="rgb(34,139,34)"
-          inactive-color="rgb(211,211,211)"
-          @update:rating="setRating"
-        />
-      </div>
+    <div class="flex-col justify-center gap-5 mb-4">
+      <star-rating
+        :increment="0.5"
+        :glow="3"
+        :star-size="20"
+        active-color="rgb(34,139,34)"
+        inactive-color="rgb(211,211,211)"
+        @update:rating="setRating"
+      />
       <base-button
         label="Add rating"
         @click="addRating()"
         :disabled="!rating"
+        class="mt-2"
       />
     </div>
     <!-- write review component -->
-    <div class="flex-col">
+    <div class="justify-center gap-5">
+      <write-review :movie="movie" class="w-[20rem]" />
       <base-list :list-items="movie.reviews" item-name="review" />
-      <write-review :movie="movie" />
     </div>
     <!-- suggest related movies component -->
-    <div class="flex-col">
-      <base-list :list-items="movie.suggestions" item-name="suggestion" />
+    <div class="flex-col justify-center">
       <suggest-related-movies :movie="movie" />
+      <base-list :list-items="movie.suggestions" item-name="suggestion" />
     </div>
-  </div>
+      </div>
+  </td>
 </template>

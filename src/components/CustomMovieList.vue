@@ -10,11 +10,11 @@ const props = defineProps<{
 </script>
 
 <template>
-  <ul v-for="(movie, index) in movies">
+  <tbody v-for="(movie, index) in movies">
     <custom-movie-list-item :movie="movie" :index="index">
       <template #toggleCard>
         <custom-toggle-card :movie="movie" :model-value="movie" />
       </template>
     </custom-movie-list-item>
-  </ul>
+  </tbody>
 </template>
