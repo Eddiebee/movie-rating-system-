@@ -31,8 +31,8 @@ const genres = ["action", "comedy", "thriller"];
 let selectedGenre = ref<string>("");
 
 // sort feature
-let iteratees = ref<string[]>([]);
-let sortOrders = ref<string[]>([]);
+let iteratees = ref<any[]>([]);
+let sortOrders = ref<any[]>([]);
 
 const handleSort = (iteratee: string, sortOrder: string) => {
   const { sorted, orders } = sort(

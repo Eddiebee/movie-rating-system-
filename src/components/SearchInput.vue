@@ -12,7 +12,9 @@ const props = defineProps<{
     aria-label="Search"
     aria-describedby="button-addon1"
     :value="modelValue"
-    @input="$emit('update:modelValue', $event.target.value)"
+    @input="
+      $emit('update:modelValue', ($event.target as HTMLInputElement).value)
+    "
   />
 </template>
 
