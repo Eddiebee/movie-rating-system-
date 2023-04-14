@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import CustomMovieListItem from "./CustomMovieListItem.vue";
 import CustomToggleCard from "./CustomToggleCard.vue";
-import { ref, defineProps } from "vue";
+import { defineProps } from "vue";
 import { Movie } from "../movies";
 
 const props = defineProps<{
