@@ -17,7 +17,7 @@ const props = defineProps<{
     <li v-for="parameter in parameters">
       <span
         :class="`block w-full whitespace-nowrap cursor-pointer bg-transparent py-2 px-4 text-sm font-normal text-neutral-700 ${
-          modelValue == parameter && 'text-emerald-400'
+          modelValue == parameter && 'text-emerald-500'
         }  hover:bg-neutral-100 active:text-neutral-800 active:no-underline disabled:pointer-events-none disabled:bg-transparent disabled:text-neutral-400 dark:text-neutral-200 dark:hover:bg-neutral-600`"
         data-te-dropdown-item-ref
         @click="$emit('update:modelValue', parameter)"
