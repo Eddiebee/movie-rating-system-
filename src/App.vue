@@ -163,6 +163,6 @@ const filteredMovies = () => {
       </div>
     </div>
   </div>
-  <!-- Not Found -->
+  <!-- If Data Not Found -->
   <base-not-found :show="!filteredMovies().length" />
 </template>
