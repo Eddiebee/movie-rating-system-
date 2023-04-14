@@ -2,7 +2,7 @@
 import { defineProps } from "vue";
 
 const props = defineProps<{
-  listItems: [];
+  listItems: any;
   itemName: string;
 }>();
 </script>
