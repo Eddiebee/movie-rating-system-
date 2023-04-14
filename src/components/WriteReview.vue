@@ -9,7 +9,7 @@ const props = defineProps<{
 
 const reviewInput = ref("");
 
-const addReview = (review: string, movieId: string) => {
+const addReview = (review: string) => {
   if (review) {
     const newReview: Review = { review, reviewer: "eddieabasi" };
     props.movie.reviews.push(newReview);
@@ -37,7 +37,7 @@ const addReview = (review: string, movieId: string) => {
       >
     </div>
     <base-button
-      @click="addReview(reviewInput, movie._id)"
+      @click="addReview(reviewInput)"
       class="w-[10rem] bg-green-400"
       label="Add Review"
     />

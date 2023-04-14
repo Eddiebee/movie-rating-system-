@@ -10,7 +10,7 @@ const props = defineProps<{
 
 const suggestionInput = ref<string>("");
 
-const addSuggestion = (suggestion: string, movieId: string) => {
+const addSuggestion = (suggestion: string) => {
   if (suggestion) {
     const newSuggestion: Suggestion = { suggestion, suggestedBy: "eddieabasi" };
     props.movie.suggestions.push(newSuggestion);
@@ -31,7 +31,7 @@ const addSuggestion = (suggestion: string, movieId: string) => {
     <base-button
       label="Suggest Related Movies"
       class="w-[15rem]"
-      @click="addSuggestion(suggestionInput, movie._id)"
+      @click="addSuggestion(suggestionInput)"
     />
   </div>
 </template>
